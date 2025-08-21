@@ -6,6 +6,7 @@ const app = express();
 app.use(cors({ origin: true }));
 app.use(express.json());
 
+// This line checks for the secret key from your hosting environment (e.g., Render)
 if (!process.env.FIREBASE_SERVICE_ACCOUNT_KEY) {
   throw new Error("The FIREBASE_SERVICE_ACCOUNT_KEY environment variable is not set.");
 }
@@ -16,6 +17,11 @@ admin.initializeApp({
 });
 
 const db = admin.firestore();
+
+// Health check route to confirm the server is running
+app.get("/", (req, res) => {
+  res.status(200).send("CoLearn Backend Server is running successfully!");
+});
 
 app.post("/create-student", async (req, res) => {
   const idToken = req.headers.authorization?.split("Bearer ")[1];
